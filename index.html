@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portfolio website showcasing stickman animation work with an interactive shimeji character">
+  <title>Stickman Animator Portfolio</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gray-50 text-gray-900">
+  
+  <!-- Header with Navigation -->
+  <header class="fixed top-0 w-full bg-white shadow-md z-40">
+    <nav class="container mx-auto px-4 py-4" role="navigation" aria-label="Main navigation">
+      <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-800">Stickman Animator</h1>
+        
+        <!-- Mobile Menu Toggle -->
+        <button id="mobile-menu-toggle" class="md:hidden text-gray-700 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded p-2" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+        
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex items-center space-x-6">
+          <ul class="flex space-x-6" role="list">
+            <li><a href="#about" class="text-gray-700 hover:text-blue-600 transition-colors duration-200 focus:text-blue-600" aria-label="Navigate to About section">About</a></li>
+            <li><a href="#gallery" class="text-gray-700 hover:text-blue-600 transition-colors duration-200 focus:text-blue-600" aria-label="Navigate to Gallery section">Gallery</a></li>
+            <li><a href="#contact" class="text-gray-700 hover:text-blue-600 transition-colors duration-200 focus:text-blue-600" aria-label="Navigate to Contact section">Contact</a></li>
+          </ul>
+          <button id="toggle-character" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-200 focus:ring-2 focus:ring-blue-600 focus:ring-offset-2" aria-label="Toggle shimeji character visibility">
+            Toggle Character
+          </button>
+        </div>
+      </div>
+      
+      <!-- Mobile Navigation Menu -->
+      <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 border-t border-gray-200 pt-4">
+        <ul class="flex flex-col space-y-3" role="list">
+          <li><a href="#about" class="block text-gray-700 hover:text-blue-600 transition-colors duration-200 py-2 focus:text-blue-600" aria-label="Navigate to About section">About</a></li>
+          <li><a href="#gallery" class="block text-gray-700 hover:text-blue-600 transition-colors duration-200 py-2 focus:text-blue-600" aria-label="Navigate to Gallery section">Gallery</a></li>
+          <li><a href="#contact" class="block text-gray-700 hover:text-blue-600 transition-colors duration-200 py-2 focus:text-blue-600" aria-label="Navigate to Contact section">Contact</a></li>
+          <li>
+            <button id="toggle-character-mobile" class="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-200 focus:ring-2 focus:ring-blue-600 focus:ring-offset-2" aria-label="Toggle shimeji character visibility">
+              Toggle Character
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="pt-20">
+    
+    <!-- About Section -->
+    <section id="about" class="container mx-auto px-4 py-16">
+      <h2 class="text-4xl font-bold mb-8 text-center">About Me</h2>
+      <div class="max-w-3xl mx-auto">
+        <p class="text-lg leading-relaxed mb-4">
+          Welcome to my portfolio! I'm a passionate stickman animator dedicated to bringing simple characters to life through creative and engaging animations.
+        </p>
+        <p class="text-lg leading-relaxed mb-4">
+          With years of experience in animation, I specialize in creating dynamic stickman sequences that tell stories, convey emotions, and entertain audiences of all ages.
+        </p>
+        <p class="text-lg leading-relaxed">
+          My work combines traditional animation principles with modern techniques to create smooth, expressive, and memorable animated content.
+        </p>
+      </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="container mx-auto px-4 py-16 bg-white">
+      <h2 class="text-4xl font-bold mb-8 text-center">Animation Gallery</h2>
+      <div id="gallery-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Gallery items will be dynamically inserted here -->
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="container mx-auto px-4 py-16">
+      <h2 class="text-4xl font-bold mb-8 text-center">Get In Touch</h2>
+      <div class="max-w-2xl mx-auto">
+        <form id="contact-form" class="space-y-6">
+          <div>
+            <label for="name" class="block text-sm font-medium mb-2">Name</label>
+            <input type="text" id="name" name="name" required 
+                   class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
+                   aria-required="true">
+          </div>
+          <div>
+            <label for="email" class="block text-sm font-medium mb-2">Email</label>
+            <input type="email" id="email" name="email" required 
+                   class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
+                   aria-required="true">
+          </div>
+          <div>
+            <label for="message" class="block text-sm font-medium mb-2">Message</label>
+            <textarea id="message" name="message" rows="5" required 
+                      class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
+                      aria-required="true"></textarea>
+          </div>
+          <button type="submit" 
+                  class="w-full px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-200">
+            Send Message
+          </button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-8">
+    <div class="container mx-auto px-4 text-center">
+      <p>&copy; 2024 Stickman Animator. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Shimeji Character Canvas -->
+  <canvas id="shimeji-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-50" 
+          aria-label="Interactive stickman character animation"></canvas>
+
+  <!-- Gallery Modal -->
+  <div id="gallery-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-auto relative">
+      <button id="modal-close" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-3xl font-bold" aria-label="Close modal">
+        &times;
+      </button>
+      <div id="modal-content" class="p-8">
+        <!-- Modal content will be dynamically inserted here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Main JavaScript -->
+  <script type="module" src="js/main.js"></script>
+  
+</body>
+</html>
