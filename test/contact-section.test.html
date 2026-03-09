@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Section Test</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .test-result {
+      padding: 1rem;
+      margin: 0.5rem 0;
+      border-radius: 0.25rem;
+    }
+    .test-pass {
+      background-color: #d1fae5;
+      border: 1px solid #10b981;
+      color: #065f46;
+    }
+    .test-fail {
+      background-color: #fee2e2;
+      border: 1px solid #ef4444;
+      color: #991b1b;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 p-8">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Contact Section Tests</h1>
+    <div id="test-results"></div>
+    
+    <!-- Load the actual contact section -->
+    <div id="contact-container" class="mt-8"></div>
+  </div>
+
+  <script type="module">
+    const results = [];
+
+    function addResult(testName, passed, message) {
+      results.push({ testName, passed, message });
+      displayResults();
+    }
+
+    function displayResults() {
+      const container = document.getElementById('test-results');
+      container.innerHTML = results.map(r => `
+        <div class="test-result ${r.passed ? 'test-pass' : 'test-fail'}">
+          <strong>${r.passed ? '✓' : '✗'} ${r.testName}</strong>
+          ${r.message ? `<p class="text-sm mt-1">${r.message}</p>` : ''}
+        </div>
+      `).join('');
+    }
+
+    // Load the contact section from index.html
+    async function loadContactSection() {
+      try {
+        const response = await fetch('../index.html');
+        const html = await response.text();
+        
+        // Extract contact section
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const contactSection = doc.getElementById('contact');
+        
+        if (contactSection) {
+          document.getElementById('contact-container').appendChild(contactSection.cloneNode(true));
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.error('Failed to load contact section:', error);
+        return false;
+      }
+    }
+
+    // Run tests
+    async function runTests() {
+      // Test 1: Contact section exists
+      const loaded = await loadContactSection();
+      addResult('Contact section loads', loaded, loaded ? 'Section found in HTML' : 'Section not found');
+
+      if (!loaded) return;
+
+      const contactSection = document.getElementById('contact');
+
+      // Test 2: Semantic HTML - section element
+      const isSection = contactSection && contactSection.tagName === 'SECTION';
+      addResult('Uses semantic <section> element', isSection, 
+        isSection ? 'Requirement 1.4 satisfied' : 'Should use <section> tag');
+
+      // Test 3: Has proper ID
+      const hasId = contactSection && contactSection.id === 'contact';
+      addResult('Has correct ID attribute', hasId, 
+        hasId ? 'ID "contact" found' : 'Missing or incorrect ID');
+
+      // Test 4: Contains form element
+      const form = contactSection.querySelector('form');
+      addResult('Contains contact form', !!form, 
+        form ? 'Form element found' : 'No form element');
+
+      // Test 5: Form has required fields
+      const nameInput = form?.querySelector('#name');
+      const emailInput = form?.querySelector('#email');
+      const messageInput = form?.querySelector('#message');
+      const hasAllFields = nameInput && emailInput && messageInput;
+      addResult('Form has all required fields', hasAllFields,
+        hasAllFields ? 'Name, email, and message fields present' : 'Missing required fields');
+
+      // Test 6: Fields have proper labels
+      const nameLabel = form?.querySelector('label[for="name"]');
+      const emailLabel = form?.querySelector('label[for="email"]');
+      const messageLabel = form?.querySelector('label[for="message"]');
+      const hasLabels = nameLabel && emailLabel && messageLabel;
+      addResult('Form fields have proper labels', hasLabels,
+        hasLabels ? 'All labels present' : 'Missing labels');
+
+      // Test 7: Required attributes
+      const nameRequired = nameInput?.hasAttribute('required');
+      const emailRequired = emailInput?.hasAttribute('required');
+      const messageRequired = messageInput?.hasAttribute('required');
+      const allRequired = nameRequired && emailRequired && messageRequired;
+      addResult('Required fields marked as required', allRequired,
+        allRequired ? 'All fields have required attribute' : 'Missing required attributes');
+
+      // Test 8: ARIA attributes
+      const nameAria = nameInput?.getAttribute('aria-required') === 'true';
+      const emailAria = emailInput?.getAttribute('aria-required') === 'true';
+      const messageAria = messageInput?.getAttribute('aria-required') === 'true';
+      const hasAria = nameAria && emailAria && messageAria;
+      addResult('ARIA attributes present', hasAria,
+        hasAria ? 'Accessibility attributes found' : 'Missing ARIA attributes');
+
+      // Test 9: Submit button
+      const submitButton = form?.querySelector('button[type="submit"]');
+      addResult('Has submit button', !!submitButton,
+        submitButton ? 'Submit button found' : 'No submit button');
+
+      // Test 10: Tailwind CSS classes
+      const hasTailwind = contactSection.className.includes('container') || 
+                          contactSection.className.includes('mx-auto');
+      addResult('Uses Tailwind CSS', hasTailwind,
+        hasTailwind ? 'Requirement 2.1 satisfied' : 'Tailwind classes not found');
+
+      // Test 11: Responsive design classes
+      const hasResponsive = contactSection.innerHTML.includes('md:') || 
+                           contactSection.innerHTML.includes('lg:');
+      addResult('Includes responsive design', hasResponsive,
+        hasResponsive ? 'Responsive breakpoints found' : 'No responsive classes');
+
+      // Test 12: Contact information present
+      const hasContactInfo = contactSection.innerHTML.includes('mailto:') ||
+                            contactSection.innerHTML.includes('@');
+      addResult('Includes contact information', hasContactInfo,
+        hasContactInfo ? 'Email or contact info found' : 'No contact information');
+
+      // Test 13: Success message element
+      const successMessage = contactSection.querySelector('#contact-success');
+      addResult('Has success message element', !!successMessage,
+        successMessage ? 'Success message element found' : 'No success message element');
+
+      // Test 14: Heading present
+      const heading = contactSection.querySelector('h2');
+      addResult('Has section heading', !!heading,
+        heading ? `Heading: "${heading.textContent}"` : 'No heading found');
+
+      // Test 15: Form accessibility
+      const formLabel = form?.getAttribute('aria-label');
+      addResult('Form has aria-label', !!formLabel,
+        formLabel ? `Label: "${formLabel}"` : 'No aria-label on form');
+
+      // Summary
+      const passed = results.filter(r => r.passed).length;
+      const total = results.length;
+      const percentage = Math.round((passed / total) * 100);
+      
+      addResult('Overall', passed === total, 
+        `${passed}/${total} tests passed (${percentage}%)`);
+    }
+
+    // Run tests when page loads
+    runTests();
+  </script>
+</body>
+</html>

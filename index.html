@@ -60,18 +60,43 @@
   <main class="pt-20">
     
     <!-- About Section -->
-    <section id="about" class="container mx-auto px-4 py-16">
-      <h2 class="text-4xl font-bold mb-8 text-center">About Me</h2>
+    <section id="about" class="container mx-auto px-4 py-12 md:py-16 lg:py-20">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 md:mb-8 text-center text-gray-800">About Me</h2>
       <div class="max-w-3xl mx-auto">
-        <p class="text-lg leading-relaxed mb-4">
-          Welcome to my portfolio! I'm a passionate stickman animator dedicated to bringing simple characters to life through creative and engaging animations.
-        </p>
-        <p class="text-lg leading-relaxed mb-4">
-          With years of experience in animation, I specialize in creating dynamic stickman sequences that tell stories, convey emotions, and entertain audiences of all ages.
-        </p>
-        <p class="text-lg leading-relaxed">
-          My work combines traditional animation principles with modern techniques to create smooth, expressive, and memorable animated content.
-        </p>
+        <div class="mb-8 md:mb-12">
+          <p class="text-base md:text-lg leading-relaxed mb-4 text-gray-700">
+            Welcome to my portfolio! I'm a passionate stickman animator dedicated to bringing simple characters to life through creative and engaging animations.
+          </p>
+          <p class="text-base md:text-lg leading-relaxed mb-4 text-gray-700">
+            With years of experience in animation, I specialize in creating dynamic stickman sequences that tell stories, convey emotions, and entertain audiences of all ages.
+          </p>
+          <p class="text-base md:text-lg leading-relaxed text-gray-700">
+            My work combines traditional animation principles with modern techniques to create smooth, expressive, and memorable animated content.
+          </p>
+        </div>
+        
+        <!-- Skills Section -->
+        <div class="mt-8 md:mt-12">
+          <h3 class="text-2xl md:text-3xl font-semibold mb-4 md:mb-6 text-center text-gray-800">Skills & Expertise</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+            <div class="bg-white p-4 md:p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+              <h4 class="text-lg md:text-xl font-semibold mb-2 text-blue-600">Character Animation</h4>
+              <p class="text-sm md:text-base leading-relaxed text-gray-600">Creating expressive and dynamic stickman characters with fluid movement and personality.</p>
+            </div>
+            <div class="bg-white p-4 md:p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+              <h4 class="text-lg md:text-xl font-semibold mb-2 text-blue-600">Action Sequences</h4>
+              <p class="text-sm md:text-base leading-relaxed text-gray-600">Designing exciting fight scenes, parkour movements, and dynamic action choreography.</p>
+            </div>
+            <div class="bg-white p-4 md:p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+              <h4 class="text-lg md:text-xl font-semibold mb-2 text-blue-600">Storytelling</h4>
+              <p class="text-sm md:text-base leading-relaxed text-gray-600">Crafting compelling narratives through visual animation and character interactions.</p>
+            </div>
+            <div class="bg-white p-4 md:p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+              <h4 class="text-lg md:text-xl font-semibold mb-2 text-blue-600">Frame-by-Frame</h4>
+              <p class="text-sm md:text-base leading-relaxed text-gray-600">Meticulous attention to detail in every frame for smooth, professional animations.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -84,33 +109,64 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="container mx-auto px-4 py-16">
-      <h2 class="text-4xl font-bold mb-8 text-center">Get In Touch</h2>
-      <div class="max-w-2xl mx-auto">
-        <form id="contact-form" class="space-y-6">
-          <div>
-            <label for="name" class="block text-sm font-medium mb-2">Name</label>
-            <input type="text" id="name" name="name" required 
-                   class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                   aria-required="true">
+    <section id="contact" class="container mx-auto px-4 py-12 md:py-16 lg:py-20">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 md:mb-8 text-center text-gray-800">Get In Touch</h2>
+      
+      <div class="max-w-4xl mx-auto">
+        <!-- Contact Information -->
+        <div class="text-center mb-8 md:mb-12">
+          <p class="text-base md:text-lg leading-relaxed mb-6 text-gray-700">
+            Interested in working together or have a question? Feel free to reach out!
+          </p>
+          <div class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 text-gray-700">
+            <a href="mailto:contact@stickmananimator.com" 
+               class="flex items-center gap-2 hover:text-blue-600 transition-colors duration-200 focus:text-blue-600"
+               aria-label="Send email to contact@stickmananimator.com">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+              <span>contact@stickmananimator.com</span>
+            </a>
           </div>
-          <div>
-            <label for="email" class="block text-sm font-medium mb-2">Email</label>
-            <input type="email" id="email" name="email" required 
-                   class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                   aria-required="true">
+        </div>
+        
+        <!-- Contact Form -->
+        <div class="max-w-2xl mx-auto bg-white p-6 md:p-8 rounded-lg shadow-sm">
+          <form id="contact-form" class="space-y-6" aria-label="Contact form">
+            <div>
+              <label for="name" class="block text-sm font-medium mb-2 text-gray-700">Name</label>
+              <input type="text" id="name" name="name" required 
+                     class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200"
+                     aria-required="true"
+                     placeholder="Your name">
+            </div>
+            <div>
+              <label for="email" class="block text-sm font-medium mb-2 text-gray-700">Email</label>
+              <input type="email" id="email" name="email" required 
+                     class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200"
+                     aria-required="true"
+                     placeholder="your.email@example.com">
+            </div>
+            <div>
+              <label for="message" class="block text-sm font-medium mb-2 text-gray-700">Message</label>
+              <textarea id="message" name="message" rows="5" required 
+                        class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200 resize-vertical"
+                        aria-required="true"
+                        placeholder="Tell me about your project or inquiry..."></textarea>
+            </div>
+            <button type="submit" 
+                    class="w-full px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-200 focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 font-medium"
+                    aria-label="Submit contact form">
+              Send Message
+            </button>
+          </form>
+          
+          <!-- Success Message (hidden by default) -->
+          <div id="contact-success" class="hidden mt-6 p-4 bg-green-50 border border-green-200 rounded text-green-800" role="alert">
+            <p class="font-medium">Thank you for your message!</p>
+            <p class="text-sm mt-1">I'll get back to you as soon as possible.</p>
           </div>
-          <div>
-            <label for="message" class="block text-sm font-medium mb-2">Message</label>
-            <textarea id="message" name="message" rows="5" required 
-                      class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-600"
-                      aria-required="true"></textarea>
-          </div>
-          <button type="submit" 
-                  class="w-full px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-200">
-            Send Message
-          </button>
-        </form>
+        </div>
       </div>
     </section>
 

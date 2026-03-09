@@ -26,6 +26,20 @@ html {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
+.gallery-item:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.gallery-item:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.gallery-item:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
 /* Modal animations */
 #gallery-modal {
   transition: opacity 0.3s ease;

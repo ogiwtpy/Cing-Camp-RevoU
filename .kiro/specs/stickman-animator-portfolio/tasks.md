@@ -16,19 +16,19 @@ The plan follows an incremental approach: establish project structure, build sta
   - _Requirements: 1.1, 1.2, 1.4, 1.5_
 
 - [ ] 2. Implement static portfolio UI components
-  - [-] 2.1 Build header and navigation
+  - [x] 2.1 Build header and navigation
     - Create fixed header with animator name and navigation links
     - Implement smooth scroll navigation to sections
     - Add Tailwind classes for styling and responsive behavior
     - _Requirements: 1.1, 1.6, 2.1, 2.3_
   
-  - [~] 2.2 Create about section
+  - [x] 2.2 Create about section
     - Add semantic section element with about content
     - Style with Tailwind for typography and spacing
     - Ensure responsive layout for mobile/tablet/desktop
     - _Requirements: 1.2, 2.2, 2.4_
   
-  - [~] 2.3 Build gallery grid layout
+  - [x] 2.3 Build gallery grid layout
     - Create Gallery class in js/gallery.js
     - Implement grid layout with Tailwind (responsive columns)
     - Add gallery items with titles, descriptions, and media elements
@@ -41,7 +41,7 @@ The plan follows an incremental approach: establish project structure, build sta
     - Test empty gallery edge case
     - _Requirements: 3.1, 3.2_
   
-  - [~] 2.5 Implement gallery modal functionality
+  - [x] 2.5 Implement gallery modal functionality
     - Add modal overlay and content container
     - Implement openModal() and closeModal() methods
     - Add keyboard support (Escape to close)
@@ -54,20 +54,20 @@ The plan follows an incremental approach: establish project structure, build sta
     - Test focus trap behavior
     - _Requirements: 3.5, 11.2_
   
-  - [~] 2.7 Create contact section
+  - [x] 2.7 Create contact section
     - Add contact section with semantic HTML
     - Style with Tailwind for consistent design
     - _Requirements: 1.4, 2.1_
 
 - [ ] 3. Implement character rendering system
-  - [~] 3.1 Create canvas layer and ShimejiCharacter class
+  - [x] 3.1 Create canvas layer and ShimejiCharacter class
     - Add canvas element with absolute positioning and high z-index
     - Create ShimejiCharacter class in js/shimeji-character.js
     - Initialize canvas context and character dimensions
     - Implement basic position and state properties
     - _Requirements: 4.1, 4.2, 4.4, 4.5_
   
-  - [~] 3.2 Build CharacterRenderer with stickman drawing
+  - [x] 3.2 Build CharacterRenderer with stickman drawing
     - Create CharacterRenderer class in js/character-renderer.js
     - Implement generateSpriteFrames() for procedural frame generation
     - Implement drawStickman() method for rendering head, body, arms, legs
@@ -86,7 +86,7 @@ The plan follows an incremental approach: establish project structure, build sta
     - Test that rendered animation corresponds to current state across random state values
 
 - [ ] 4. Implement physics engine and movement
-  - [~] 4.1 Create PhysicsEngine class
+  - [x] 4.1 Create PhysicsEngine class
     - Create PhysicsEngine class in js/physics-engine.js
     - Implement applyGravity() with gravity constant and terminal velocity
     - Implement applyFriction() for ground and air resistance
@@ -101,7 +101,7 @@ The plan follows an incremental approach: establish project structure, build sta
     - **Validates: Requirements 7.2**
     - Test that velocity changes gradually over multiple frames across random speed changes
   
-  - [~] 4.3 Implement character state machine
+  - [x] 4.3 Implement character state machine
     - Define CharacterStates enum (IDLE, WALKING, JUMPING, FALLING, CLIMBING, SITTING, DRAGGED)
     - Implement setState() method with state transition logic
     - Add state-specific behavior in update() method
@@ -113,7 +113,7 @@ The plan follows an incremental approach: establish project structure, build sta
     - Test rapid state transition edge case
     - _Requirements: 5.3_
   
-  - [~] 4.5 Implement autonomous movement logic
+  - [-] 4.5 Implement autonomous movement logic
     - Add random direction changes for walking behavior
     - Implement boundary detection for viewport edges
     - Add boundary response behaviors (bounce, direction change)

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery Test - Stickman Animator Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gray-50 p-8">
+  <div class="container mx-auto">
+    <h1 class="text-4xl font-bold mb-8 text-center">Gallery Component Test</h1>
+    
+    <!-- Gallery Container -->
+    <section id="gallery" class="bg-white p-8 rounded-lg shadow-md">
+      <h2 class="text-2xl font-bold mb-6">Animation Gallery</h2>
+      <div id="gallery-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Gallery items will be dynamically inserted here -->
+      </div>
+    </section>
+    
+    <!-- Test Controls -->
+    <div class="mt-8 bg-blue-50 p-6 rounded-lg">
+      <h3 class="text-xl font-bold mb-4">Test Controls</h3>
+      <div class="space-y-2">
+        <button id="test-empty" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 mr-2">
+          Test Empty Gallery
+        </button>
+        <button id="test-single" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 mr-2">
+          Test Single Item
+        </button>
+        <button id="test-multiple" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 mr-2">
+          Test Multiple Items
+        </button>
+        <button id="test-add" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 mr-2">
+          Add Item
+        </button>
+      </div>
+      <div class="mt-4">
+        <p class="text-sm text-gray-600">
+          <strong>Test Instructions:</strong><br>
+          1. Click buttons to test different gallery states<br>
+          2. Hover over gallery items to see hover effects<br>
+          3. Click gallery items to open modal<br>
+          4. Press Escape or click X to close modal<br>
+          5. Test keyboard navigation with Tab and Enter keys
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gallery Modal -->
+  <div id="gallery-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-auto relative">
+      <button id="modal-close" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-3xl font-bold" aria-label="Close modal">
+        &times;
+      </button>
+      <div id="modal-content" class="p-8">
+        <!-- Modal content will be dynamically inserted here -->
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { Gallery } from './js/gallery.js';
+
+    // Sample gallery items
+    const sampleItems = [
+      {
+        id: 'anim-1',
+        title: 'Action Sequence',
+        description: 'Dynamic stickman fight scene with fluid movements',
+        src: 'https://via.placeholder.com/800x600/4299e1/ffffff?text=Action+Sequence',
+        thumbnail: 'https://via.placeholder.com/400x300/4299e1/ffffff?text=Action+Sequence',
+        alt: 'Stickman performing action sequence with punches and kicks',
+        type: 'image'
+      },
+      {
+        id: 'anim-2',
+        title: 'Parkour Run',
+        description: 'Stickman navigating obstacles with parkour moves',
+        src: 'https://via.placeholder.com/800x600/10b981/ffffff?text=Parkour+Run',
+        thumbnail: 'https://via.placeholder.com/400x300/10b981/ffffff?text=Parkour+Run',
+        alt: 'Stickman performing parkour movements over obstacles',
+        type: 'image'
+      },
+      {
+        id: 'anim-3',
+        title: 'Dance Animation',
+        description: 'Smooth dance routine with rhythm and style',
+        src: 'https://via.placeholder.com/800x600/f59e0b/ffffff?text=Dance+Animation',
+        thumbnail: 'https://via.placeholder.com/400x300/f59e0b/ffffff?text=Dance+Animation',
+        alt: 'Stickman performing dance moves',
+        type: 'image'
+      },
+      {
+        id: 'anim-4',
+        title: 'Combat Training',
+        description: 'Intense martial arts training sequence',
+        src: 'https://via.placeholder.com/800x600/ef4444/ffffff?text=Combat+Training',
+        thumbnail: 'https://via.placeholder.com/400x300/ef4444/ffffff?text=Combat+Training',
+        alt: 'Stickman practicing martial arts moves',
+        type: 'image'
+      },
+      {
+        id: 'anim-5',
+        title: 'Acrobatic Flip',
+        description: 'Impressive acrobatic flips and aerial maneuvers',
+        src: 'https://via.placeholder.com/800x600/8b5cf6/ffffff?text=Acrobatic+Flip',
+        thumbnail: 'https://via.placeholder.com/400x300/8b5cf6/ffffff?text=Acrobatic+Flip',
+        alt: 'Stickman performing acrobatic flips',
+        type: 'image'
+      },
+      {
+        id: 'anim-6',
+        title: 'Speed Run',
+        description: 'High-speed running animation with motion blur effects',
+        src: 'https://via.placeholder.com/800x600/ec4899/ffffff?text=Speed+Run',
+        thumbnail: 'https://via.placeholder.com/400x300/ec4899/ffffff?text=Speed+Run',
+        alt: 'Stickman running at high speed',
+        type: 'image'
+      }
+    ];
+
+    // Initialize gallery with multiple items
+    let gallery = new Gallery('gallery-container', sampleItems);
+
+    // Test controls
+    document.getElementById('test-empty').addEventListener('click', () => {
+      console.log('Testing empty gallery...');
+      gallery.updateItems([]);
+    });
+
+    document.getElementById('test-single').addEventListener('click', () => {
+      console.log('Testing single item...');
+      gallery.updateItems([sampleItems[0]]);
+    });
+
+    document.getElementById('test-multiple').addEventListener('click', () => {
+      console.log('Testing multiple items...');
+      gallery.updateItems(sampleItems);
+    });
+
+    document.getElementById('test-add').addEventListener('click', () => {
+      console.log('Adding new item...');
+      const newItem = {
+        id: 'anim-new-' + Date.now(),
+        title: 'New Animation',
+        description: 'Newly added animation item',
+        src: 'https://via.placeholder.com/800x600/6366f1/ffffff?text=New+Animation',
+        thumbnail: 'https://via.placeholder.com/400x300/6366f1/ffffff?text=New+Animation',
+        alt: 'New animation item',
+        type: 'image'
+      };
+      gallery.addItem(newItem);
+    });
+
+    console.log('Gallery test page loaded successfully');
+    console.log('Gallery instance:', gallery);
+  </script>
+</body>
+</html>

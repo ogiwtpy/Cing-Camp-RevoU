@@ -3,9 +3,9 @@
  * Initializes all components and manages application lifecycle
  */
 
-// Import modules (to be created in future tasks)
-// import { Gallery } from './gallery.js';
-// import { ShimejiCharacter } from './shimeji/character.js';
+// Import modules
+import { Gallery } from './gallery.js';
+import { ShimejiCharacter } from './shimeji-character.js';
 // import { InputHandler } from './shimeji/input-handler.js';
 // import { AnimationLoop } from './shimeji/animation-loop.js';
 
@@ -34,8 +34,8 @@ function init() {
   // Initialize portfolio UI components
   initializePortfolio();
   
-  // Initialize shimeji character (will be implemented in future tasks)
-  // initializeCharacter();
+  // Initialize shimeji character
+  initializeCharacter();
   
   // Set up event listeners
   setupEventListeners();
@@ -85,8 +85,6 @@ function initializePortfolio() {
  * Initialize gallery with sample items
  */
 function initializeGallery() {
-  const galleryContainer = document.getElementById('gallery-container');
-  
   // Sample gallery items (placeholder data)
   const galleryItems = [
     {
@@ -115,77 +113,38 @@ function initializeGallery() {
       thumbnail: 'assets/animations/dance-thumb.jpg',
       alt: 'Stickman performing dance moves',
       type: 'gif'
+    },
+    {
+      id: 'anim-4',
+      title: 'Combat Training',
+      description: 'Intense martial arts training sequence',
+      src: 'assets/animations/combat-training.gif',
+      thumbnail: 'assets/animations/combat-training-thumb.jpg',
+      alt: 'Stickman practicing martial arts moves',
+      type: 'gif'
+    },
+    {
+      id: 'anim-5',
+      title: 'Acrobatic Flip',
+      description: 'Impressive acrobatic flips and aerial maneuvers',
+      src: 'assets/animations/acrobatic-flip.gif',
+      thumbnail: 'assets/animations/acrobatic-flip-thumb.jpg',
+      alt: 'Stickman performing acrobatic flips',
+      type: 'gif'
+    },
+    {
+      id: 'anim-6',
+      title: 'Speed Run',
+      description: 'High-speed running animation with motion blur effects',
+      src: 'assets/animations/speed-run.gif',
+      thumbnail: 'assets/animations/speed-run-thumb.jpg',
+      alt: 'Stickman running at high speed',
+      type: 'gif'
     }
   ];
   
-  // Render gallery items
-  galleryItems.forEach((item, index) => {
-    const itemElement = createGalleryItem(item, index);
-    galleryContainer.appendChild(itemElement);
-  });
-}
-
-/**
- * Create a gallery item element
- */
-function createGalleryItem(item, index) {
-  const article = document.createElement('article');
-  article.className = 'gallery-item bg-white rounded-lg shadow-md overflow-hidden';
-  article.setAttribute('role', 'button');
-  article.setAttribute('tabindex', '0');
-  article.setAttribute('aria-label', `View ${item.title}`);
-  
-  article.innerHTML = `
-    <div class="aspect-video bg-gray-200 flex items-center justify-center">
-      <img src="${item.thumbnail}" alt="${item.alt}" class="w-full h-full object-cover" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%23ddd%22 width=%22400%22 height=%22300%22/%3E%3Ctext fill=%22%23999%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3EImage Placeholder%3C/text%3E%3C/svg%3E'">
-    </div>
-    <div class="p-4">
-      <h3 class="text-xl font-semibold mb-2">${item.title}</h3>
-      <p class="text-gray-600">${item.description}</p>
-    </div>
-  `;
-  
-  // Add click handler to open modal
-  article.addEventListener('click', () => openGalleryModal(item));
-  article.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      openGalleryModal(item);
-    }
-  });
-  
-  return article;
-}
-
-/**
- * Open gallery modal with item details
- */
-function openGalleryModal(item) {
-  const modal = document.getElementById('gallery-modal');
-  const modalContent = document.getElementById('modal-content');
-  
-  modalContent.innerHTML = `
-    <h2 class="text-3xl font-bold mb-4">${item.title}</h2>
-    <div class="mb-4">
-      <img src="${item.src}" alt="${item.alt}" class="w-full rounded-lg" onerror="this.src='${item.thumbnail}'">
-    </div>
-    <p class="text-gray-700 text-lg">${item.description}</p>
-  `;
-  
-  modal.classList.remove('hidden');
-  modal.classList.add('show');
-  
-  // Focus on close button for accessibility
-  document.getElementById('modal-close').focus();
-}
-
-/**
- * Close gallery modal
- */
-function closeGalleryModal() {
-  const modal = document.getElementById('gallery-modal');
-  modal.classList.remove('show');
-  modal.classList.add('hidden');
+  // Initialize Gallery class
+  app.gallery = new Gallery('gallery-container', galleryItems);
 }
 
 /**
@@ -271,6 +230,7 @@ function closeMobileMenu() {
  */
 function setupContactForm() {
   const form = document.getElementById('contact-form');
+  const successMessage = document.getElementById('contact-success');
   
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -282,8 +242,16 @@ function setupContactForm() {
     console.log('Contact form submitted:', data);
     
     // Show success message (in production, this would send to a server)
-    alert('Thank you for your message! I will get back to you soon.');
+    successMessage.classList.remove('hidden');
     form.reset();
+    
+    // Hide success message after 5 seconds
+    setTimeout(() => {
+      successMessage.classList.add('hidden');
+    }, 5000);
+    
+    // Scroll success message into view
+    successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   });
 }
 
@@ -291,40 +259,22 @@ function setupContactForm() {
  * Set up global event listeners
  */
 function setupEventListeners() {
-  // Modal close button
-  const modalClose = document.getElementById('modal-close');
-  modalClose.addEventListener('click', closeGalleryModal);
-  
-  // Close modal on escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      const modal = document.getElementById('gallery-modal');
-      if (!modal.classList.contains('hidden')) {
-        closeGalleryModal();
-      }
-    }
-  });
-  
-  // Close modal on background click
-  const modal = document.getElementById('gallery-modal');
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      closeGalleryModal();
-    }
-  });
-  
   // Character toggle buttons (will be implemented in future tasks)
   const toggleButton = document.getElementById('toggle-character');
   const toggleButtonMobile = document.getElementById('toggle-character-mobile');
   
   toggleButton.addEventListener('click', () => {
-    console.log('Character toggle clicked (character not yet implemented)');
-    // Future: app.character.toggleVisibility();
+    if (app.character) {
+      app.character.toggleVisibility();
+      console.log('Character visibility toggled');
+    }
   });
   
   toggleButtonMobile.addEventListener('click', () => {
-    console.log('Character toggle clicked (character not yet implemented)');
-    // Future: app.character.toggleVisibility();
+    if (app.character) {
+      app.character.toggleVisibility();
+      console.log('Character visibility toggled');
+    }
   });
   
   // Mobile menu toggle
@@ -344,11 +294,46 @@ function handleResize() {
 }
 
 /**
- * Initialize character (placeholder for future implementation)
+ * Initialize character
  */
 function initializeCharacter() {
-  // This will be implemented in future tasks
-  console.log('Character initialization will be implemented in future tasks');
+  try {
+    // Create ShimejiCharacter instance
+    app.character = new ShimejiCharacter('shimeji-canvas');
+    
+    // Start animation loop
+    startAnimationLoop();
+    
+    console.log('Shimeji character initialized successfully');
+  } catch (error) {
+    console.error('Failed to initialize character:', error);
+    // Character is optional, so continue without it
+  }
+}
+
+/**
+ * Start the animation loop for character movement
+ */
+function startAnimationLoop() {
+  let lastFrameTime = performance.now();
+  
+  function loop(currentTime) {
+    // Calculate delta time normalized to 60fps
+    const deltaTime = (currentTime - lastFrameTime) / 16.67;
+    lastFrameTime = currentTime;
+    
+    // Update and render character
+    if (app.character && app.character.isVisible) {
+      app.character.update(deltaTime);
+      app.character.render();
+    }
+    
+    // Continue loop
+    requestAnimationFrame(loop);
+  }
+  
+  // Start the loop
+  requestAnimationFrame(loop);
 }
 
 // Initialize application when DOM is ready

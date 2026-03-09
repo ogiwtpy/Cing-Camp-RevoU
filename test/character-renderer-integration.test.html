@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CharacterRenderer Integration Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-container {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    canvas {
+      border: 2px solid #2563eb;
+      background: white;
+      display: block;
+      margin: 10px 0;
+    }
+    .test-result {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+    .pass {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .fail {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .controls {
+      margin: 20px 0;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 10px 20px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+    button.active {
+      background: #059669;
+    }
+  </style>
+</head>
+<body>
+  <h1>CharacterRenderer Integration Test</h1>
+  <p>This test verifies that CharacterRenderer is properly integrated with ShimejiCharacter</p>
+  
+  <div class="test-container">
+    <h2>Integration Test: ShimejiCharacter with CharacterRenderer</h2>
+    <canvas id="integration-canvas" width="800" height="400"></canvas>
+    <div class="controls">
+      <button data-state="idle">Idle</button>
+      <button data-state="walking">Walking</button>
+      <button data-state="jumping">Jumping</button>
+      <button data-state="falling">Falling</button>
+      <button data-state="climbing">Climbing</button>
+      <button data-state="sitting">Sitting</button>
+      <button data-state="dragged">Dragged</button>
+    </div>
+    <div id="integration-result"></div>
+  </div>
+  
+  <div class="test-container">
+    <h2>Automated Tests</h2>
+    <div id="test-results"></div>
+  </div>
+  
+  <script type="module">
+    import { ShimejiCharacter, CharacterStates } from '../js/shimeji-character.js';
+    
+    let character;
+    let animationId;
+    
+    // Initialize character
+    try {
+      character = new ShimejiCharacter('integration-canvas');
+      character.position.x = 380;
+      character.position.y = 150;
+      showResult('integration-result', true, 'ShimejiCharacter initialized with CharacterRenderer');
+    } catch (error) {
+      showResult('integration-result', false, `Initialization failed: ${error.message}`);
+    }
+    
+    // Animation loop
+    function animate() {
+      if (character && character.isVisible) {
+        character.update(1);
+        character.render();
+      }
+      animationId = requestAnimationFrame(animate);
+    }
+    
+    // Start animation
+    animate();
+    
+    // State change buttons
+    const buttons = document.querySelectorAll('button[data-state]');
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        const state = button.getAttribute('data-state');
+        character.setState(state);
+        
+        // Update active button
+        buttons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        
+        showResult('integration-result', true, `State changed to: ${state}`);
+      });
+    });
+    
+    // Set initial active button
+    buttons[0].classList.add('active');
+    
+    // Automated tests
+    const testResults = document.getElementById('test-results');
+    
+    function addTestResult(testName, passed, message = '') {
+      const div = document.createElement('div');
+      div.className = `test-result ${passed ? 'pass' : 'fail'}`;
+      div.innerHTML = `
+        <strong>${passed ? '✓' : '✗'} ${testName}</strong>
+        ${message ? `<br><small>${message}</small>` : ''}
+      `;
+      testResults.appendChild(div);
+    }
+    
+    // Test 1: CharacterRenderer exists
+    try {
+      const hasRenderer = character.renderer !== undefined && character.renderer !== null;
+      addTestResult('CharacterRenderer instance exists', hasRenderer, 
+        'ShimejiCharacter has a renderer property');
+    } catch (error) {
+      addTestResult('CharacterRenderer instance exists', false, error.message);
+    }
+    
+    // Test 2: Sprite frames generated
+    try {
+      const hasFrames = character.renderer.spriteFrames !== undefined;
+      const frameStates = Object.keys(character.renderer.spriteFrames);
+      const expectedStates = ['idle', 'walking', 'jumping', 'falling', 'climbing', 'sitting', 'dragged'];
+      const allStatesPresent = expectedStates.every(state => frameStates.includes(state));
+      
+      addTestResult('Sprite frames generated for all states', allStatesPresent,
+        `Found states: ${frameStates.join(', ')}`);
+    } catch (error) {
+      addTestResult('Sprite frames generated for all states', false, error.message);
+    }
+    
+    // Test 3: Frame data structure
+    try {
+      const idleFrames = character.renderer.spriteFrames.idle;
+      const firstFrame = idleFrames[0];
+      const hasCorrectStructure = 
+        firstFrame.headOffset !== undefined &&
+        firstFrame.bodyOffset !== undefined &&
+        firstFrame.leftArmAngle !== undefined &&
+        firstFrame.rightArmAngle !== undefined &&
+        firstFrame.leftLegAngle !== undefined &&
+        firstFrame.rightLegAngle !== undefined;
+      
+      addTestResult('Frame data has correct structure', hasCorrectStructure,
+        'Frame contains all required properties');
+    } catch (error) {
+      addTestResult('Frame data has correct structure', false, error.message);
+    }
+    
+    // Test 4: Drawing method exists
+    try {
+      const hasDrawMethod = typeof character.renderer.drawStickman === 'function';
+      addTestResult('drawStickman method exists', hasDrawMethod,
+        'CharacterRenderer has drawStickman method');
+    } catch (error) {
+      addTestResult('drawStickman method exists', false, error.message);
+    }
+    
+    // Test 5: Render uses CharacterRenderer
+    try {
+      // Clear canvas and render
+      character.ctx.clearRect(0, 0, character.canvas.width, character.canvas.height);
+      character.render();
+      
+      // Check if something was drawn (canvas is not empty)
+      const imageData = character.ctx.getImageData(0, 0, character.canvas.width, character.canvas.height);
+      const hasPixels = imageData.data.some(value => value !== 0);
+      
+      addTestResult('Render uses CharacterRenderer', hasPixels,
+        'Character is drawn on canvas');
+    } catch (error) {
+      addTestResult('Render uses CharacterRenderer', false, error.message);
+    }
+    
+    // Test 6: State changes affect rendering
+    try {
+      character.setState(CharacterStates.WALKING);
+      character.currentFrame = 0;
+      character.render();
+      
+      const walkingImageData = character.ctx.getImageData(
+        character.position.x, 
+        character.position.y, 
+        character.width, 
+        character.height
+      );
+      
+      character.setState(CharacterStates.JUMPING);
+      character.currentFrame = 0;
+      character.render();
+      
+      const jumpingImageData = character.ctx.getImageData(
+        character.position.x, 
+        character.position.y, 
+        character.width, 
+        character.height
+      );
+      
+      // Compare image data (should be different)
+      let isDifferent = false;
+      for (let i = 0; i < walkingImageData.data.length; i++) {
+        if (walkingImageData.data[i] !== jumpingImageData.data[i]) {
+          isDifferent = true;
+          break;
+        }
+      }
+      
+      addTestResult('State changes affect rendering', isDifferent,
+        'Different states produce different visual output');
+    } catch (error) {
+      addTestResult('State changes affect rendering', false, error.message);
+    }
+    
+    // Test 7: Frame cycling
+    try {
+      character.setState(CharacterStates.IDLE);
+      const initialFrame = character.currentFrame;
+      
+      // Simulate multiple updates
+      for (let i = 0; i < 10; i++) {
+        character.update(1);
+      }
+      
+      const frameCycled = character.currentFrame !== initialFrame;
+      addTestResult('Frame cycling works', frameCycled,
+        `Frame advanced from ${initialFrame} to ${character.currentFrame}`);
+    } catch (error) {
+      addTestResult('Frame cycling works', false, error.message);
+    }
+    
+    // Test 8: getFrameCount method
+    try {
+      const idleFrameCount = character.renderer.getFrameCount('idle');
+      const walkingFrameCount = character.renderer.getFrameCount('walking');
+      
+      const hasFrameCounts = idleFrameCount > 0 && walkingFrameCount > 0;
+      addTestResult('getFrameCount method works', hasFrameCounts,
+        `Idle: ${idleFrameCount} frames, Walking: ${walkingFrameCount} frames`);
+    } catch (error) {
+      addTestResult('getFrameCount method works', false, error.message);
+    }
+    
+    // Helper function
+    function showResult(elementId, passed, message) {
+      const element = document.getElementById(elementId);
+      element.className = `test-result ${passed ? 'pass' : 'fail'}`;
+      element.innerHTML = `<strong>${passed ? 'PASS' : 'FAIL'}:</strong> ${message}`;
+    }
+  </script>
+</body>
+</html>

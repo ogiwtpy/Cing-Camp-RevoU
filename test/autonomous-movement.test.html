@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task 4.5 - Autonomous Movement Test</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+    }
+    
+    #test-canvas {
+      border: 2px solid #333;
+      background: white;
+      display: block;
+      margin: 20px auto;
+    }
+    
+    .controls {
+      text-align: center;
+      margin: 20px;
+    }
+    
+    .controls button {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    
+    .info {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 15px;
+      background: white;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .test-results {
+      margin-top: 20px;
+      padding: 15px;
+      background: #e8f4f8;
+      border-left: 4px solid #2196F3;
+    }
+    
+    .test-item {
+      margin: 10px 0;
+      padding: 8px;
+      background: white;
+      border-radius: 3px;
+    }
+    
+    .pass { color: green; font-weight: bold; }
+    .fail { color: red; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1 style="text-align: center;">Task 4.5: Autonomous Movement Logic Test</h1>
+  
+  <div class="info">
+    <h2>Test Objectives</h2>
+    <ul>
+      <li><strong>Random Direction Changes:</strong> Character should randomly change direction while walking</li>
+      <li><strong>Boundary Detection:</strong> Character should detect viewport edges</li>
+      <li><strong>Boundary Response:</strong> Character should bounce, reverse direction, or change behavior at boundaries</li>
+    </ul>
+    <p><strong>Requirements:</strong> 5.1 (viewport containment), 5.2 (boundary response)</p>
+  </div>
+  
+  <canvas id="test-canvas" width="800" height="600"></canvas>
+  
+  <div class="controls">
+    <button id="start-btn">Start Animation</button>
+    <button id="stop-btn">Stop Animation</button>
+    <button id="reset-btn">Reset Position</button>
+    <button id="run-tests-btn">Run Automated Tests</button>
+  </div>
+  
+  <div class="info">
+    <h3>Manual Observations</h3>
+    <p>Watch the character for 30-60 seconds and verify:</p>
+    <ol>
+      <li>Character moves autonomously without user input</li>
+      <li>Character changes direction randomly while walking</li>
+      <li>Character stays within canvas boundaries (never goes outside)</li>
+      <li>Character responds to boundaries (bounces, reverses, or changes state)</li>
+      <li>Character exhibits varied behaviors (walking, jumping, idle)</li>
+    </ol>
+  </div>
+  
+  <div id="test-results" class="info test-results" style="display: none;">
+    <h3>Automated Test Results</h3>
+    <div id="results-container"></div>
+  </div>
+  
+  <script type="module">
+    // Import character classes
+    import { ShimejiCharacter, CharacterStates } from '../js/shimeji-character.js';
+    
+    // Test state
+    let character = null;
+    let animationId = null;
+    let lastFrameTime = 0;
+    let isRunning = false;
+    
+    // Test tracking
+    let boundaryHits = { left: 0, right: 0, top: 0, bottom: 0 };
+    let directionChanges = 0;
+    let lastVelocityX = 0;
+    
+    // Initialize
+    function init() {
+      try {
+        character = new ShimejiCharacter('test-canvas');
+        character.setState(CharacterStates.WALKING);
+        character.velocity.x = 3;
+        character.isGrounded = true;
+        
+        console.log('Character initialized successfully');
+        
+        // Set up event listeners
+        document.getElementById('start-btn').addEventListener('click', startAnimation);
+        document.getElementById('stop-btn').addEventListener('click', stopAnimation);
+        document.getElementById('reset-btn').addEventListener('click', resetCharacter);
+        document.getElementById('run-tests-btn').addEventListener('click', runAutomatedTests);
+        
+        // Start automatically
+        startAnimation();
+      } catch (error) {
+        console.error('Failed to initialize character:', error);
+        alert('Failed to initialize character: ' + error.message);
+      }
+    }
+    
+    function startAnimation() {
+      if (!isRunning) {
+        isRunning = true;
+        lastFrameTime = performance.now();
+        animationId = requestAnimationFrame(animate);
+        console.log('Animation started');
+      }
+    }
+    
+    function stopAnimation() {
+      if (isRunning) {
+        isRunning = false;
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+          animationId = null;
+        }
+        console.log('Animation stopped');
+      }
+    }
+    
+    function resetCharacter() {
+      if (character) {
+        character.position.x = 400;
+        character.position.y = 300;
+        character.velocity.x = 3;
+        character.velocity.y = 0;
+        character.setState(CharacterStates.WALKING);
+        character.isGrounded = true;
+        
+        // Reset tracking
+        boundaryHits = { left: 0, right: 0, top: 0, bottom: 0 };
+        directionChanges = 0;
+        lastVelocityX = character.velocity.x;
+        
+        console.log('Character reset');
+      }
+    }
+    
+    function animate(currentTime) {
+      if (!isRunning) return;
+      
+      const deltaTime = (currentTime - lastFrameTime) / 16.67;
+      lastFrameTime = currentTime;
+      
+      // Track boundary hits
+      const prevPos = { x: character.position.x, y: character.position.y };
+      
+      // Update and render
+      character.update(deltaTime);
+      character.render();
+      
+      // Track boundary collisions
+      const canvas = character.canvas;
+      if (character.position.x <= 0) boundaryHits.left++;
+      if (character.position.x >= canvas.width - character.width) boundaryHits.right++;
+      if (character.position.y <= 0) boundaryHits.top++;
+      if (character.position.y >= canvas.height - character.height) boundaryHits.bottom++;
+      
+      // Track direction changes
+      if (Math.sign(character.velocity.x) !== Math.sign(lastVelocityX) && lastVelocityX !== 0) {
+        directionChanges++;
+        console.log('Direction change detected:', directionChanges);
+      }
+      lastVelocityX = character.velocity.x;
+      
+      animationId = requestAnimationFrame(animate);
+    }
+    
+    // Automated tests
+    async function runAutomatedTests() {
+      const resultsContainer = document.getElementById('results-container');
+      const resultsDiv = document.getElementById('test-results');
+      resultsContainer.innerHTML = '';
+      resultsDiv.style.display = 'block';
+      
+      const results = [];
+      
+      // Test 1: Boundary containment
+      results.push(await testBoundaryContainment());
+      
+      // Test 2: Boundary response
+      results.push(await testBoundaryResponse());
+      
+      // Test 3: Random direction changes
+      results.push(await testRandomDirectionChanges());
+      
+      // Test 4: Physics integration
+      results.push(testPhysicsIntegration());
+      
+      // Display results
+      results.forEach(result => {
+        const div = document.createElement('div');
+        div.className = 'test-item';
+        div.innerHTML = `
+          <span class="${result.pass ? 'pass' : 'fail'}">${result.pass ? '✓ PASS' : '✗ FAIL'}</span>
+          <strong>${result.name}</strong>: ${result.message}
+        `;
+        resultsContainer.appendChild(div);
+      });
+      
+      const passCount = results.filter(r => r.pass).length;
+      const totalCount = results.length;
+      
+      const summary = document.createElement('div');
+      summary.style.marginTop = '15px';
+      summary.style.fontWeight = 'bold';
+      summary.innerHTML = `Summary: ${passCount}/${totalCount} tests passed`;
+      resultsContainer.appendChild(summary);
+    }
+    
+    async function testBoundaryContainment() {
+      resetCharacter();
+      
+      // Test positions near boundaries
+      const testPositions = [
+        { x: -10, y: 300 },
+        { x: 900, y: 300 },
+        { x: 400, y: -10 },
+        { x: 400, y: 700 }
+      ];
+      
+      let allContained = true;
+      
+      for (const pos of testPositions) {
+        character.position.x = pos.x;
+        character.position.y = pos.y;
+        character.update(1);
+        
+        const canvas = character.canvas;
+        if (character.position.x < 0 || 
+            character.position.x > canvas.width - character.width ||
+            character.position.y < 0 || 
+            character.position.y > canvas.height - character.height) {
+          allContained = false;
+          break;
+        }
+      }
+      
+      return {
+        name: 'Boundary Containment (Req 5.1)',
+        pass: allContained,
+        message: allContained 
+          ? 'Character stays within viewport boundaries' 
+          : 'Character escaped viewport boundaries'
+      };
+    }
+    
+    async function testBoundaryResponse() {
+      resetCharacter();
+      
+      // Test left boundary
+      character.position.x = 5;
+      character.velocity.x = -5;
+      const prevVelX = character.velocity.x;
+      character.update(1);
+      
+      const respondedToLeft = character.velocity.x !== prevVelX || character.state !== CharacterStates.WALKING;
+      
+      // Test right boundary
+      character.position.x = character.canvas.width - character.width - 5;
+      character.velocity.x = 5;
+      const prevVelX2 = character.velocity.x;
+      character.update(1);
+      
+      const respondedToRight = character.velocity.x !== prevVelX2 || character.state !== CharacterStates.WALKING;
+      
+      const responded = respondedToLeft || respondedToRight;
+      
+      return {
+        name: 'Boundary Response (Req 5.2)',
+        pass: responded,
+        message: responded 
+          ? 'Character responds to boundary collisions' 
+          : 'Character does not respond to boundaries'
+      };
+    }
+    
+    async function testRandomDirectionChanges() {
+      resetCharacter();
+      
+      // Run for 300 frames and check for direction changes
+      let changes = 0;
+      let lastVel = character.velocity.x;
+      
+      for (let i = 0; i < 300; i++) {
+        character.update(1);
+        if (Math.sign(character.velocity.x) !== Math.sign(lastVel) && lastVel !== 0) {
+          changes++;
+        }
+        lastVel = character.velocity.x;
+      }
+      
+      // Should have at least some direction changes in 300 frames
+      const hasChanges = changes > 0;
+      
+      return {
+        name: 'Random Direction Changes (Req 5.2)',
+        pass: hasChanges,
+        message: hasChanges 
+          ? `Character changed direction ${changes} times in 300 frames` 
+          : 'No direction changes detected'
+      };
+    }
+    
+    function testPhysicsIntegration() {
+      const hasPhysics = character.physics !== undefined && character.physics !== null;
+      
+      return {
+        name: 'Physics Engine Integration',
+        pass: hasPhysics,
+        message: hasPhysics 
+          ? 'Physics engine is integrated' 
+          : 'Physics engine not found'
+      };
+    }
+    
+    // Initialize on load
+    window.addEventListener('load', init);
+  </script>
+</body>
+</html>
