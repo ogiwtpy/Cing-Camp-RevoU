@@ -113,7 +113,7 @@ The plan follows an incremental approach: establish project structure, build sta
     - Test rapid state transition edge case
     - _Requirements: 5.3_
   
-  - [-] 4.5 Implement autonomous movement logic
+  - [x] 4.5 Implement autonomous movement logic
     - Add random direction changes for walking behavior
     - Implement boundary detection for viewport edges
     - Add boundary response behaviors (bounce, direction change)
